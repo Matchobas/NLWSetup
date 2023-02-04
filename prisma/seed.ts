@@ -2,7 +2,14 @@ import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
 async function main() {
+  await prisma.habit.deleteMany();
   
+  await prisma.habit.create({
+    data: {
+      title: "Fazer 1 commit no GitHub",
+      created_at: new Date('2023-02-01T00:00:00.000z'),
+    }
+  })
 }
 
 main()
