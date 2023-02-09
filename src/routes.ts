@@ -115,4 +115,20 @@ export async function appRoutes(app: FastifyInstance) {
       });
     }
   });
+
+  app.get('/summary', async (request, response) => {
+    const summary = await prisma.$queryRaw`
+      SELECT 
+        d.id,
+        d.date,
+        (
+          SELECT
+            cast(count(*) as float)
+          FROM day_habits dh
+          WHERE dh.day_id = d.id
+        ) as completed
+      FROM days d
+    `
+    return summary;
+  });
 }
