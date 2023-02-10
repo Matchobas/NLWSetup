@@ -126,7 +126,17 @@ export async function appRoutes(app: FastifyInstance) {
             cast(count(*) as float)
           FROM day_habits dh
           WHERE dh.day_id = d.id
-        ) as completed
+        ) as completed,
+        (
+          SELECT
+            cast(count(*) as float)
+          FROM habit_week_days hwd
+          JOIN habits h
+            ON h.id = hwd.habit_id
+          WHERE
+            hwd.week_day = cast(strftime('%w', d.date/1000.0, 'unixepoch') as int)
+            AND h.created_at <= d.date
+        ) as amount
       FROM days d
     `
     return summary;
