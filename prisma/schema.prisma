@@ -18,8 +18,11 @@ model Habit {
   id         String          @id @default(uuid())
   title      String
   created_at DateTime
+  user_id    String
   dayHabits  DayHabit[]
   weekDays   HabitWeekDays[]
+
+  user User @relation(fields: [user_id], references: [id])
 
   @@map("habits")
 }
@@ -55,4 +58,14 @@ model DayHabit {
 
   @@unique([day_id, habit_id])
   @@map("day_habits")
+}
+
+model User {
+  id String @id @default(uuid())
+
+  username String
+  password String
+  Habit    Habit[]
+
+  @@map("user")
 }
